@@ -19,12 +19,14 @@ def preprocess(img):
     arr = np.array(img)/255.0
     return np.expand_dims(arr, axis=0)
 
-# Predict function
+# Predict function (corrected)
 def predict(img):
     x = preprocess(img)
     prob = float(model.predict(x, verbose=0)[0][0])
-    label = '🔥 Fire' if prob > 0.5 else '✅ No Fire'
-    confidence = prob if prob > 0.5 else 1 - prob
+    
+    # Correct label mapping based on class_indices
+    label = '🔥 Fire' if prob < 0.5 else '✅ No Fire'  # swapped to match training
+    confidence = 1 - prob if prob < 0.5 else prob
     return label, confidence
 
 # File uploader
